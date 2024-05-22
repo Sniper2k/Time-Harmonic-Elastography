@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+
+\usetikzlibrary{external}
+\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error 
+-interaction=batchmode -jobname "\image" "\texsource" && % or ;
+pdftops -eps "\image".pdf}}
+\tikzexternalize[shell escape=-enable-write18]
+
+\begin{document}%
+
+\begin{tikzpicture}[scale=1]
+\matrix (m) [matrix of nodes, 
+			column sep = 0.05cm, 
+			row sep = 0.05cm,
+			nodes={anchor = center},] at (8.5, 0)
+{
+	 $I(1,\cdot)$ & $I(500,\cdot)$ & $I(1000,\cdot)$ & $I(1500,\cdot)$ & $I(2000,\cdot)$ \\
+        \includegraphics[width = 120pt]{image_1.png}  
+        & \includegraphics[width = 120pt]{image_500.png} 
+        & \includegraphics[width = 120pt]{image_1000.png}
+        & \includegraphics[width = 120pt]{image_1500.png} 
+        & \includegraphics[width = 120pt]{image_2000.png}
+        \\
+        
+        \includegraphics[width = 120pt]{trajectory_1.png}  
+        & \includegraphics[width = 120pt]{trajectory_500.png}  
+        & \includegraphics[width = 120pt]{trajectory_1000.png} 
+        & \includegraphics[width = 120pt]{trajectory_1500.png}  
+        & \includegraphics[width = 120pt]{trajectory_2000.png} 
+        \\ 
+};   
+\end{tikzpicture}
+
+\end{document}

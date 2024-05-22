@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage[a4paper,landscape]{geometry}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{matrix}
+\usepackage{amssymb,amsmath,mathtools}
+\usepackage{mathabx}
+
+\usetikzlibrary{external}
+\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error 
+-interaction=batchmode -jobname "\image" "\texsource" && % or ;
+pdftops -eps "\image".pdf}}
+\tikzexternalize[shell escape=-enable-write18]
+
+\pgfplotsset{
+  colormap={parula}{
+    rgb255=(53,42,135)
+    rgb255=(15,92,221)
+    rgb255=(18,125,216)
+    rgb255=(7,156,207)
+    rgb255=(21,177,180)
+    rgb255=(89,189,140)
+    rgb255=(165,190,107)
+    rgb255=(225,185,82)
+    rgb255=(252,206,46)
+    rgb255=(249,251,14)}}
+
+\begin{document}%
+\begin{tikzpicture}[scale=1]
+\matrix (m) [matrix of nodes, 
+			column sep = 0.05cm, 
+			row sep = 0.05cm,
+			nodes={anchor = center},] at (8.5, 0)
+{
+        & Ground truth & Model I, $\lambda = 1000$  & Model II, $\lambda = 0.0008$ & Model III, $\lambda = 20$ & Matlab, $\lambda = 15000$ & PDHGM, $\lambda = 1000$ \\
+        $|\boldsymbol a_1|$
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_true.png}  
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_lsqr.png} 
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_l1l2.png} 
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_l1.png}
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_matlab.png}
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_x_jhf.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=21, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={5,10,15,20}},
+        yticklabel style={
+          xshift=2mm,yshift=0mm%align=right
+        }
+        ]
+        \\
+        $|\boldsymbol a_2|$
+	  &	\includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_true.png}  
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_lsqr.png} 
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_l1l2.png}
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_l1.png} 
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_matlab.png}
+        & \includegraphics[height = 100pt, trim={5 5 45 5}, clip]{a_y_jhf.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=12, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={5,10,15,20}},
+        yticklabel style={
+          xshift=2mm,%align=right
+        }
+        ]
+        \\ 
+        & RE / SSIM  & 0.033 / 0.807 & 0.069/ 0.904 & 0.043/0.885 & 0.030/0.795 & 0.049 / 0.829 \\
+        & RIE / ISSIM & 0.0000114 / 0.99950 & 0.0000431 / 0.99804 & 0.0000262 / 0.99883 & 0.0000098/ 0.99954 & 0.0000132 / 0.99949 \\
+        & Runtime, s & 2.9 & 14.9  & 7.3 & 53.3 & 211.4  \\
+};   
+\end{tikzpicture}
+
+\end{document}
