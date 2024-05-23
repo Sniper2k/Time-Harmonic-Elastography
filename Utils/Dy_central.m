@@ -1,3 +1,4 @@
+% Central derivative for y axis
 function uy = Dy_central(u)
 h = [-1,-2,-1; 0,0,0; 1,2,1] / 8;
 uy = imfilter(u,h',"circular");

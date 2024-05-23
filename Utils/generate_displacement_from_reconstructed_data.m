@@ -1,6 +1,27 @@
+%% Simulation of image displacement
+% Authors: Oleh Melnyk, Michael Quellmalz 
+% Based on Section 5.1 of
+% [1] Melnyk, Quellmalz, Steidl, Jaitner, Jordan, Sack, Time-Harmonic
+% Optical Flow with Applications in Elastography, to appear
+%
+% Inputs:
+%
+% I_0: d_1 x d_2 image of the initial frame.    
+%
+% a_x, a_y: d_1 x d_2 amplitudes of the velocity fields in both x and y axis.  
+%
+% nt: integer>0, the number of frames to generate
+%
+% bin: in {1, ..., nt}, frequency of the time-harmonic oscilation.
+% Equivalently, 1 + the number of period repetitions in the observed images
+% 
+% varargin: >0, if given denotes the standard deviation of Gauss filter
+% applied to derivatives. If not given, defaul is 100.
 
-function [Irec, varargout] = generate_displacement_from_reconstructed_data(I, a_x, a_y, nt, bin, varargin)
-d = size(I, [1 2]);
+function [Irec, varargout] = generate_displacement_from_reconstructed_data(I_0, a_x, a_y, nt, bin, varargin)
+d = size(I_0, [1 2]);
+
+% Initialize variables
 
 [X, Y] = meshgrid(1:d(1), 1:d(2));
 X = X';
@@ -8,68 +29,40 @@ Y = Y';
 
 v_x = zeros(d(1),d(2),nt);
 v_y = zeros(d(1),d(2),nt);
-phi_x = zeros(d(1),d(2),nt+1);
-phi_x(:,:,1) = X;
-phi_y = zeros(d(1),d(2),nt+1);
-phi_y(:,:,1) = Y;
 
-if nargin>5 && varargin{1}<0 % Use old code for negative smoothing parameter
+% Initial condition (25) in [1] for psi as in 
 
-a2_x_re = griddedInterpolant(X,Y,squeeze(real(a_x)), 'spline', 'nearest');
-a2_x_im = griddedInterpolant(X,Y,squeeze(imag(a_x)), 'spline', 'nearest');
-a2_y_re = griddedInterpolant(X,Y,squeeze(real(a_y)), 'spline', 'nearest');
-a2_y_im = griddedInterpolant(X,Y,squeeze(imag(a_y)), 'spline', 'nearest');
+psi_x = zeros(d(1),d(2),nt+1);
+psi_x(:,:,1) = X;
+psi_y = zeros(d(1),d(2),nt+1);
+psi_y(:,:,1) = Y;
 
-for k=2:nt
-    a_phi_x = a2_x_re(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1))) + 1j*a2_x_im(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1)));
-    a_phi_y = a2_y_re(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1))) + 1j*a2_y_im(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1)));
 
-    v_x(:,:,k-1) = real( a_phi_x .* exp(2.0j*pi *(bin-1)*(k-2)/nt ) );
-    v_y(:,:,k-1) = real( a_phi_y .* exp(2.0j*pi *(bin-1)*(k-2)/nt ) );
-
-    phi_x(:,:,k) = phi_x(:,:,k-1) - v_x(:,:,k-1)/nt;
-    phi_y(:,:,k) = phi_y(:,:,k-1) - v_y(:,:,k-1)/nt;
-end
-a_phi_x = a2_x_re(squeeze(phi_x(:,:,nt)), squeeze(phi_y(:,:,nt))) + 1j*a2_x_im(squeeze(phi_x(:,:,nt)), squeeze(phi_y(:,:,nt)));
-a_phi_y = a2_y_re(squeeze(phi_x(:,:,nt)), squeeze(phi_y(:,:,nt))) + 1j*a2_y_im(squeeze(phi_x(:,:,nt)), squeeze(phi_y(:,:,nt)));
-v_x(:,:,nt) = real( a_phi_x .* exp(2.0j*pi *(bin-1)*(k-2)/nt) );
-v_y(:,:,nt) = real( a_phi_y .* exp(2.0j*pi *(bin-1)*(k-2)/nt) );
-
-else
-
-if nargin > 5
+if nargin > 5 && varargin{1} > 0
     scale = varargin{1};
 else
     scale = 100;
 end
 
 for k=2:(nt+1)
+    % Compute velocity at time k-1
     v_x(:,:,k-1) = real( a_x .* exp(2.0j*pi *(bin-1)*(k-2)/nt ));
     v_y(:,:,k-1) = real( a_y .* exp(2.0j*pi *(bin-1)*(k-2)/nt ));
 
-    phi_x(:,:,k) = phi_x(:,:,k-1) - imgaussfilt(Dx_central(phi_x(:,:,k-1)),scale).*v_x(:,:,k-1)/nt - imgaussfilt(Dy_central(phi_x(:,:,k-1)),scale).*v_y(:,:,k-1)/nt;
-    phi_y(:,:,k) = phi_y(:,:,k-1) - imgaussfilt(Dx_central(phi_y(:,:,k-1)),scale).*v_x(:,:,k-1)/nt - imgaussfilt(Dy_central(phi_y(:,:,k-1)),scale).*v_y(:,:,k-1)/nt;
+    % Perform a step in the Euler scheme for D_t psi = - Grad psi v
+    psi_x(:,:,k) = psi_x(:,:,k-1) - imgaussfilt(Dx_central(psi_x(:,:,k-1)),scale).*v_x(:,:,k-1)/nt - imgaussfilt(Dy_central(psi_x(:,:,k-1)),scale).*v_y(:,:,k-1)/nt;
+    psi_y(:,:,k) = psi_y(:,:,k-1) - imgaussfilt(Dx_central(psi_y(:,:,k-1)),scale).*v_x(:,:,k-1)/nt - imgaussfilt(Dy_central(psi_y(:,:,k-1)),scale).*v_y(:,:,k-1)/nt;
 end
 
-% for k=2:nt  % Approximates Dphi by one
-% %     a_phi_x = a2_x_re(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1))) + 1j*a2_x_im(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1)));
-% %     a_phi_y = a2_y_re(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1))) + 1j*a2_y_im(squeeze(phi_x(:,:,k-1)), squeeze(phi_y(:,:,k-1)));
-% 
-%     v_x(:,:,k-1) = real( a_x .* exp(2.0j*pi *(bin-1)*(k-2)/nt ));
-%     v_y(:,:,k-1) = real( a_y .* exp(2.0j*pi *(bin-1)*(k-2)/nt ));
-% 
-%     phi_x(:,:,k) = phi_x(:,:,k-1) - v_x(:,:,k-1)/nt;
-%     phi_y(:,:,k) = phi_y(:,:,k-1) - v_y(:,:,k-1)/nt;
-% end
-end
-
+% Compute displaced images via (26) in [1]
 Irec = zeros(d(1),d(2),nt);
-Irec(:,:,1) = I(:,:);
+Irec(:,:,1) = I_0(:,:);
 I2 = griddedInterpolant(X,Y,squeeze(Irec(:,:,1)), 'spline', 'nearest');
 for k = 2:nt
-  Irec(:,:,k) = I2(squeeze(phi_x(:,:,k)),squeeze(phi_y(:,:,k)));
+  Irec(:,:,k) = I2(squeeze(psi_x(:,:,k)),squeeze(psi_y(:,:,k)));
 end
 
+% Store computed velocities for further use
 varargout = cell(1,2);
 varargout{1} = v_x;
 varargout{2} = v_y;

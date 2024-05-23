@@ -107,7 +107,7 @@ l2e = sum(abs(a_x_rec(:)-a_x_grid(:)).^2 + abs(a_y_rec(:)-a_y_grid(:)).^2);
 l2e = l2e / sum(abs(a_x_grid(:)).^2 + abs(a_y_grid(:)).^2);
 ss = density_ssim(a_x_rec,a_y_rec,a_x_grid,a_y_grid);
 Irec = generate_displacement_from_reconstructed_data(Ipn(:,:,1),a_x_rec,a_y_rec, nt, bin,1);
-m_err = rel_measurement_error(Irec, double(Ipn));
+m_err = relq_measurement_error(Irec, double(Ipn));
 m_ssim = images_ssim(Irec, Ipn);
 
 fprintf('Error: %.03f Rel.meas.err %.07f  SSIM %.03f meas SSIM %0.07f \n', l2e, m_err, ss, m_ssim)
@@ -215,7 +215,6 @@ fprintf('Error: %.03f Rel.meas.err %.07f  SSIM %.03f meas SSIM %0.07f \n', l2e, 
 figure(13)
 imagesc(rot90(abs(a_x_rec)))
 % title('Magnitudes of spatial density a_x reconstructed Matlab')
-% legend({'Groundtruth', 'reconstructed'})
 colorbar()
 clim(cx)
 axis('off')
@@ -225,7 +224,6 @@ export_fig a_x_matlab -png -transparent
 figure(14)
 imagesc(rot90(abs(a_y_rec)))
 % title('Magnitudes of spatial density a_y reconstructed Matlab')
-% legend({'Groundtruth', 'reconstructed'})
 colorbar()
 clim(cy)
 axis('off')

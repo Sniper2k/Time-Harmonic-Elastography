@@ -1,3 +1,11 @@
+%% Helper function to store frames as video
+%
+% f: d_1 x d_2 x nt volume containing nt images of size d_1 x d_2  
+% 
+% filename: string with a path
+%
+% framerate: Rate of video playback in frames per second, specified as a
+% positive number. See help for VideoWriter for details.
 function save_video(f, filename, framerate)
 v = VideoWriter(filename,'Indexed AVI'); % only AVI works on linux
 v.Colormap = parula(256);
