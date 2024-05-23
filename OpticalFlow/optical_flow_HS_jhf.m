@@ -21,7 +21,7 @@
 %
 % level: number of levels in the pyramid
 %
-% method: the choice of regularizer, see switch below. 
+% method: 'TV' for L_1 regularizer and 'H1' for L_2^2.
 %
 % par: [0<theta<1, tau>0, sigma >0], PDHGM parameters. 
 
@@ -50,22 +50,7 @@ end
 % scale      = 0.95;
 % omega      = 0.7;
 
-% method = 'TV'; % TV, H1, TGV, TV-TV2 or IC
-
-% switch method
-% 	case 'TGV'
-% 		lambda     = [0.1 5];
-% 	case 'TV'
-% 		lambda     = [0.1];
-% 	case 'TV-TV2'
-% 		lambda     = [0.1 0.02];
-% 	case 'IC'
-% 		lambda     = [0.1 5 0.00001];
-% 	case 'H1'
-% 		lambda     = [50];
-% 	otherwise
-% 		error('Wrong method.')
-% end
+% method = 'TV'; % TV, H1
 
 % Solve optical flow for each pair of images
 
