@@ -40,7 +40,7 @@ File/Folder                | Purpose
 --------------------------:| ---------------------------------------------------------------------
 OpticalFlow (dir)          | Contains implementation of algortihms for time-harmonic optical flow 
 Util (dir)                 | Contains utility functions such as computation of discrete derivatives and simulation of the displaced images
-figures (dir) 	           | Source code for the numerical experiments in [1] and gel dataset
+figures (dir) 	           | Source code for the numerical experiments in [1] and gel and agar datasets
 flow_programs_matlab (dir) | Implementation of primal-dual hybrid gradient method from [2]
 COPYING                    | License information
 README.md                  | This file
