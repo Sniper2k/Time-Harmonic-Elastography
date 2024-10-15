@@ -30,7 +30,8 @@ __Strain analysis by a total generalized variation regularized optical flow mode
 
 Dependencies
 ------------
-This software uses [export_fig](https://de.mathworks.com/matlabcentral/fileexchange/23629-export_fig) for all source files in folder "figures" 
+This software uses [export_fig](https://de.mathworks.com/matlabcentral/fileexchange/23629-export_fig) for all source files in folder "figures".
+We also use [ffmpeg](https://www.ffmpeg.org/) for saving video files. 
 
 Directory structure
 -------------------
