@@ -18,7 +18,7 @@ When you are using this code, please cite the paper
 
 [1] Oleh Melnyk, Michael Quellmalz, Gabriele Steidl, Noah Jaitner, Jakob Jordan, Ingolf Sack:
 __Time-Harmonic Optical Flow with Applications in Elastography__.
-*to appear*
+[arxiv:2405.15507](https://arxiv.org/abs/2405.15507)
 
 This paper also explains the algorithms in more detail.
 
@@ -30,7 +30,8 @@ __Strain analysis by a total generalized variation regularized optical flow mode
 
 Dependencies
 ------------
-This software uses [export_fig](https://de.mathworks.com/matlabcentral/fileexchange/23629-export_fig) for all source files in folder "figures" 
+This software uses [export_fig](https://de.mathworks.com/matlabcentral/fileexchange/23629-export_fig) for all source files in folder "figures".
+We also use [ffmpeg](https://www.ffmpeg.org/) for saving video files. 
 
 Directory structure
 -------------------
