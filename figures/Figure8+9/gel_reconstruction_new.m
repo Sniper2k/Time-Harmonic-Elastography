@@ -227,9 +227,6 @@ axis('off')
 
 export_fig a_y_jhf -png -transparent
 
-space = zeros(d(1),5,nt);
-save_video(repmat([double(I) space Irec],1,1,10), strcat('gel_jhf'))
-
 a_rec_jhf_x = a_x_rec;
 a_rec_jhf_y = a_y_rec;
 
@@ -279,11 +276,67 @@ orig_pos = [h(1) 0; h(1) + s(1) 0; h(1) + 2*s(1) 0; h(1) s(2); h(1) + s(1) s(2);
 
 frames_lab = video_add_label(frames, orig_label, orig_pos);
 save_video(repmat(frames_lab,1,1,5), 'gel_video', 24)
-[~,cmdout] = system('ffmpeg -y -i gel_video.avi -c:v libx264 -preset slow -crf 16 gel_video.mp4');
 
 frames_lab = video_add_label(frames_v, orig_label, orig_pos);
 save_video(repmat(frames_lab,1,1,5), 'gel_velocity', 6)
-[~,cmdout] = system('ffmpeg -y -i gel_velocity.avi -c:v libx264 -preset slow -crf 16 gel_velocity.mp4');
+
+%% Store velocity images for Figure 9
+cv = .8*max([v_lsqr,v_l1,v_l1l2],[],'all');
+
+for t=1:6
+  figure(31)
+  imagesc(v_lsqr(:,:,t))
+  axis('off')
+  clim([0,cv])
+  export_fig(sprintf('gel_v_lsqr_t=%d',t),'-png','-transparent')
+
+  figure(32)
+  imagesc(v_l1(:,:,t))
+  axis('off')
+  clim([0,cv])
+  export_fig(sprintf('gel_v_l1_t=%d',t),'-png','-transparent')
+
+  figure(33)
+  imagesc(v_l1l2(:,:,t))
+  axis('off')
+  clim([0,cv])
+  export_fig(sprintf('gel_v_l1l2_t=%d',t),'-png','-transparent')
+
+  figure(34)
+  imagesc(v_matlab(:,:,t))
+  axis('off')
+  clim([0,cv])
+  export_fig(sprintf('gel_v_mat_t=%d',t),'-png','-transparent')
+
+  figure(35)
+  imagesc(v_jhf(:,:,t))
+  axis('off')
+  clim([0,cv])
+  export_fig(sprintf('gel_v_jhf_t=%d',t),'-png','-transparent')
+end
+
+%% Reverting the distortion
+
+h = size(I, [2 1]) / 2;
+s = size(I, [2 1]);
+s(1) = s(1) + size(hs,1);
+s(2) = s(2) + size(vs,2);
+orig_pos = [h(1) 0; h(1) + s(1) 0; h(1) + 2*s(1) 0; h(1) s(2); h(1) + s(1) s(2); h(1) + 2*s(1) s(2)];
+vs = zeros(size(I,1),5,nt);
+hs = zeros(5, 3*size(I,2) + 10, nt);
+
+I_stable_lsqr = stabilize_frame_seq(I, vx_lsqr, vy_lsqr,3);
+I_stable_matlab = stabilize_frame_seq(I, vx_matlab, vy_matlab,3);
+I_stable_l1l2 = stabilize_frame_seq(I, vx_l1l2, vy_l1l2,3);
+I_stable_l1 = stabilize_frame_seq(I, vx_l1, vy_l1,3);
+I_stable_jhf = stabilize_frame_seq(I, vx_jhf, vy_jhf,3);
+
+
+frames_still2 = double([(I) vs (I_stable_matlab) vs (I_stable_jhf); hs; ...
+  (I_stable_lsqr) vs (I_stable_l1l2) vs (I_stable_l1)]);
+frames_still2 = video_add_label(frames_still2, orig_label, orig_pos);
+
+save_video(repmat(frames_still2,1,1,1), 'gel_still_video', 6)
 
 
 function Ip = rescale(I,scale) 

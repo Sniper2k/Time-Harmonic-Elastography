@@ -1,0 +1,73 @@
+\documentclass[crop=true, border=0pt]{standalone}
+%\documentclass{article}
+%\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{matrix}
+\usepackage{amssymb,amsmath,mathtools}
+\usepackage{mathabx}
+
+%\usetikzlibrary{external}
+%\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error 
+%-interaction=batchmode -jobname "\image" "\texsource" && % or ;
+%pdftops -eps "\image".pdf}}
+%\tikzexternalize[shell escape=-enable-write18]
+
+\pgfplotsset{
+  colormap={parula}{
+    rgb255=(53,42,135)
+    rgb255=(15,92,221)
+    rgb255=(18,125,216)
+    rgb255=(7,156,207)
+    rgb255=(21,177,180)
+    rgb255=(89,189,140)
+    rgb255=(165,190,107)
+    rgb255=(225,185,82)
+    rgb255=(252,206,46)
+    rgb255=(249,251,14)}}
+\pgfplotsset{every colorbar/.append style={line width=0pt}}
+
+\begin{document}%
+
+\begin{tikzpicture}[scale=1]
+\matrix (m) [matrix of nodes, 
+			column sep = 0.05cm, 
+			row sep = 0.05cm,
+			nodes={anchor = center},] at (8.5, 0)
+{
+        & Model I, $\lambda = 2000$ & Model II, $\lambda = 0.5$  & Model III, $\lambda = 20$  & Matlab, $\lambda = 10000$ & PDHGM, $\lambda = 1000$ \\
+        $|\boldsymbol a_1|$  
+        & \includegraphics[height = 100pt,width = 125pt]{a_x_lsqr_lambda=2000_its=100.png} 
+        & \includegraphics[height = 100pt,width = 125pt]{a_x_l1l2_lambda=0.5_its=2000_iti=200.png} 
+        & \includegraphics[height = 100pt,width = 125pt]{a_x_l1_lambda=20_its=300_iti=50.png}
+        & \includegraphics[height = 100pt,width = 125pt]{a_x_matlab.png}
+        & \includegraphics[height = 100pt,width = 125pt]{a_x_jhf.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=100, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={20,40,60,80}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]
+        \\
+        $|\boldsymbol a_2|$
+        & \includegraphics[height = 100pt,width = 125pt]{a_y_lsqr_lambda=2000_its=100.png} 
+        & \includegraphics[height = 100pt,width = 125pt]{a_y_l1l2_lambda=0.5_its=2000_iti=200.png} 
+        & \includegraphics[height = 100pt,width = 125pt]{a_y_l1_lambda=20_its=300_iti=50.png}
+        & \includegraphics[height = 100pt,width = 125pt]{a_y_matlab.png}
+        & \includegraphics[height = 100pt,width = 125pt]{a_y_jhf.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=100, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={20,40,60,80}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]
+        \\ 
+        RIE\,/\,ISSIM  & 0.00103 / 0.955  & 0.00109 / 0.951 & 0.00108 / 0.953 & 0.00104 / 0.954 & 0.00107 / 0.954 \\ 
+        Runtime, s & 11 & 361 & 41 & 15 & 588 \\ 
+};   
+\end{tikzpicture}
+
+\end{document}

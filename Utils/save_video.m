@@ -17,4 +17,6 @@ sz = size(f);
 open(v)
 writeVideo(v, uint8(reshape(f, sz(1),sz(2),1,sz(3)) / max(f(:)) * 2^8));
 close(v)
+[~,cmdout] = system(['ffmpeg -y -i ' filename '.avi -c:v libx264 -preset slow -crf 18 ' filename '.mp4']);
+delete([filename '.avi'])
 end
