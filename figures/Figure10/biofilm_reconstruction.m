@@ -83,12 +83,7 @@ fprintf('%s Runtime %.03f (LSQR)\n', name,time)
 [Irec,vx,vy] = generate_displacement_from_reconstructed_data(Ip(:,:,1),a_x_rec,a_y_rec, nt, bin,10);
 m_err = rel_measurement_error(Irec, double(Ip));
 m_ss = ssim(Irec, double(Ip), DynamicRange=max(Ip(:)));
-fprintf('Rel.meas.err %.06f  SSIM: %.04f \n', m_err(j), m_ss(j))
-    
-I_stable = stabilize_frame_seq(Ip, vx, vy,3);
-s_err = rel_measurement_error(I_stable, double(repmat(Ip(:,:,1),1,1,nt)));
-s_ss = ssim(I_stable, double(repmat(Ip(:,:,1),1,1,nt)), DynamicRange=max(Ip(:,:,1),'','all'));
-fprintf('Rel.still.err %.06f  SSIM: %.03f \n', s_err(j), s_ss(j))
+fprintf('Rel.meas.err %.06f  SSIM: %.04f \n', m_err, m_ss)
     
 figure(5)
 imagesc(abs(a_x_rec))
@@ -126,11 +121,6 @@ m_err = rel_measurement_error(Irec, double(Ip));
 m_ss = ssim(Irec, double(Ip), DynamicRange=max(Ip(:)));
 fprintf('Rel.meas.err %.06f  SSIM: %.03f \n', m_err, m_ss)
 
-I_stable = stabilize_frame_seq(Ip, vx, vy,3);
-s_err = rel_measurement_error(I_stable, double(repmat(Ip(:,:,1),1,1,nt)));
-s_ss = ssim(I_stable, double(repmat(Ip(:,:,1),1,1,nt)), DynamicRange=max(Ip(:,:,1),'','all'));
-fprintf('Rel.still.err %.06f  SSIM: %.03f \n', s_err, s_ss)
-
 figure(9)
 imagesc(abs(a_x_rec))
 colorbar()
@@ -166,11 +156,6 @@ m_err = rel_measurement_error(Irec, double(Ip));
 m_ss = ssim(Irec, double(Ip), DynamicRange=max(Ip(:)));
 fprintf('Rel.meas.err %.06f  SSIM: %.03f \n', m_err, m_ss)
     
-I_stable = stabilize_frame_seq(Ip, vx, vy,3);
-s_err = rel_measurement_error(I_stable, double(repmat(Ip(:,:,1),1,1,nt)));
-s_ss = ssim(I_stable, double(repmat(Ip(:,:,1),1,1,nt)), DynamicRange=max(Ip(:,:,1),'','all'));
-fprintf('Rel.still.err %.06f  SSIM: %.03f \n', s_err, s_ss)
-    
 figure(7)
 imagesc(abs(a_x_rec))
 colorbar()
@@ -203,11 +188,6 @@ fprintf('Runtime %.03f (Matlab)\n',time)
 m_err = rel_measurement_error(Irec, double(Ip));
 m_ss = ssim(Irec, double(Ip), DynamicRange=max(Ip(:)));
 fprintf('Rel.meas.err %.06f  SSIM: %.03f \n', m_err, m_ss)
-
-I_stable = stabilize_frame_seq(Ip, vx, vy,3);
-s_err = rel_measurement_error(I_stable, double(repmat(Ip(:,:,1),1,1,nt)));
-s_ss = ssim(I_stable, double(repmat(Ip(:,:,1),1,1,nt)), DynamicRange=max(Ip(:,:,1),'','all'));
-fprintf('Rel.still.err %.06f  SSIM: %.03f \n', s_err, s_ss)
 
 figure(11)
 imagesc(abs(a_x_rec))
@@ -245,11 +225,6 @@ fprintf('Runtime %.03f (JHF)\n',time)
 m_err = rel_measurement_error(Irec, double(Ip));
 m_ss = ssim(Irec, double(Ip), DynamicRange=max(Ip(:)));
 fprintf('Rel.meas.err %.06f  SSIM: %.03f \n', m_err, m_ss)
-
-I_stable = stabilize_frame_seq(Ip, vx, vy,3);
-s_err = rel_measurement_error(I_stable, double(repmat(Ip(:,:,1),1,1,nt)));
-s_ss = ssim(I_stable, double(repmat(Ip(:,:,1),1,1,nt)), DynamicRange=max(Ip(:,:,1),'','all'));
-fprintf('Rel.still.err %.06f  SSIM: %.03f \n', s_err, s_ss)
 
 figure(13)
 imagesc(abs(a_x_rec))
@@ -348,31 +323,31 @@ for t=1:6
   imagesc(v_lsqr(:,:,t))
   axis('off')
   clim([0,cv])
-  export_fig(sprintf('gel_v_lsqr_t=%d',t),'-png','-transparent')
+  export_fig(sprintf('agar_v_lsqr_t=%d',t),'-png','-transparent')
 
   figure(32)
   imagesc(v_l1(:,:,t))
   axis('off')
   clim([0,cv])
-  export_fig(sprintf('gel_v_l1_t=%d',t),'-png','-transparent')
+  export_fig(sprintf('agar_v_l1_t=%d',t),'-png','-transparent')
 
   figure(33)
   imagesc(v_l1l2(:,:,t))
   axis('off')
   clim([0,cv])
-  export_fig(sprintf('gel_v_l1l2_t=%d',t),'-png','-transparent')
+  export_fig(sprintf('agar_v_l1l2_t=%d',t),'-png','-transparent')
 
   figure(34)
   imagesc(v_matlab(:,:,t))
   axis('off')
   clim([0,cv])
-  export_fig(sprintf('gel_v_mat_t=%d',t),'-png','-transparent')
+  export_fig(sprintf('agar_v_mat_t=%d',t),'-png','-transparent')
 
   figure(35)
   imagesc(v_jhf(:,:,t))
   axis('off')
   clim([0,cv])
-  export_fig(sprintf('gel_v_jhf_t=%d',t),'-png','-transparent')
+  export_fig(sprintf('agar_v_jhf_t=%d',t),'-png','-transparent')
 end
 
 %% Reverting the distortion
