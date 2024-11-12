@@ -1,0 +1,116 @@
+\documentclass{article}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{matrix}
+\usepackage{amssymb,amsmath,mathtools}
+\usepackage{mathabx}
+
+\usetikzlibrary{external}
+\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error 
+-interaction=batchmode -jobname "\image" "\texsource" && % or ;
+pdftops -eps "\image".pdf}}
+\pgfplotsset{compat=1.18}
+\tikzexternalize[shell escape=-enable-write18]
+
+\pgfplotsset{
+  colormap={parula}{
+    rgb255=(53,42,135)
+    rgb255=(15,92,221)
+    rgb255=(18,125,216)
+    rgb255=(7,156,207)
+    rgb255=(21,177,180)
+    rgb255=(89,189,140)
+    rgb255=(165,190,107)
+    rgb255=(225,185,82)
+    rgb255=(252,206,46)
+    rgb255=(249,251,14)}}
+\pgfplotsset{every colorbar/.append style={line width=0pt}}
+
+\begin{document}%
+
+\begin{tikzpicture}[scale=1]
+\matrix (m) [matrix of nodes, 
+			column sep = 0.05cm, 
+			row sep = 0.05cm,
+			nodes={anchor = center},] at (8.5, 0)
+{
+        \rotatebox{90}{Model I}  
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=1.png} 
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=2.png} 
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=3.png}
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=4.png}
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=5.png}
+        & \includegraphics[height = 100pt]{gel_v_lsqr_t=6.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=140, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={50,100}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]\\
+        
+        \rotatebox{90}{Model II}  
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=1.png} 
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=2.png} 
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=3.png}
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=4.png}
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=5.png}
+        & \includegraphics[height = 100pt]{gel_v_l1l2_t=6.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=140, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={50,100}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]\\
+        
+        \rotatebox{90}{Model III}  
+        & \includegraphics[height = 100pt]{gel_v_l1_t=1.png} 
+        & \includegraphics[height = 100pt]{gel_v_l1_t=2.png} 
+        & \includegraphics[height = 100pt]{gel_v_l1_t=3.png}
+        & \includegraphics[height = 100pt]{gel_v_l1_t=4.png}
+        & \includegraphics[height = 100pt]{gel_v_l1_t=5.png}
+        & \includegraphics[height = 100pt]{gel_v_l1_t=6.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=140, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={50,100}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]\\
+        
+        \rotatebox{90}{Matlab}  
+        & \includegraphics[height = 100pt]{gel_v_mat_t=1.png} 
+        & \includegraphics[height = 100pt]{gel_v_mat_t=2.png} 
+        & \includegraphics[height = 100pt]{gel_v_mat_t=3.png}
+        & \includegraphics[height = 100pt]{gel_v_mat_t=4.png}
+        & \includegraphics[height = 100pt]{gel_v_mat_t=5.png}
+        & \includegraphics[height = 100pt]{gel_v_mat_t=6.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=140, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={50,100}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]\\
+        
+        \rotatebox{90}{PDHGM}  
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=1.png} 
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=2.png} 
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=3.png}
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=4.png}
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=5.png}
+        & \includegraphics[height = 100pt]{gel_v_jhf_t=6.png}
+        \pgfplotscolorbardrawstandalone[colormap name=parula,
+        point meta min=0,point meta max=140, 
+        colorbar style={height=100pt, width=2mm, xshift=0.0em, axis line style={draw opacity=0}, ytick={50,100}},
+        yticklabel style={
+          xshift=3mm,yshift=0mm,font=\small%align=right
+        }
+        ]\\
+};   
+\end{tikzpicture}
+
+\end{document}
